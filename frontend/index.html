@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KeyCraft — Minimal Laptop Typing Studio</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- External Modular Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500/20">
+
+  <!-- Top Navigation Bar -->
+  <header class="focus-dim w-full max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-6">
+      <button id="brandResetBtn" type="button" class="flex items-center gap-2.5 text-left group focus:outline-none" title="Reset session (Tab + Enter)">
+        <span class="w-7 h-7 rounded-md surface-elevated border flex items-center justify-center font-mono text-xs font-semibold accent-text group-hover:scale-105 transition-transform">
+          ⌘
+        </span>
+        <div>
+          <span class="font-mono font-semibold tracking-tight text-base">keycraft<span class="accent-text">.</span></span>
+          <span class="hidden sm:inline-block text-[11px] text-muted-custom ml-1.5 font-mono">laptop edition</span>
+        </div>
+      </button>
+
+      <!-- Main Mode Switcher -->
+      <nav class="flex items-center p-1 rounded-lg surface-elevated border text-xs font-medium" aria-label="Main Modes">
+        <button id="navLearnBtn" type="button" data-mode="learn" class="mode-tab px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Learn
+        </button>
+        <button id="navPracticeBtn" type="button" data-mode="practice" class="mode-tab px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Practice
+        </button>
+        <button id="navTestBtn" type="button" data-mode="test" class="mode-tab px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Speed Test
+        </button>
+      </nav>
+    </div>
+
+    <!-- Utility Bar -->
+    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
+      <!-- Dedicated Light / Night Mode Quick Toggle -->
+      <button id="lightNightToggleBtn" type="button" class="px-2.5 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors flex items-center gap-1.5 font-mono" title="Toggle Light Mode / Night Mode">
+        <span id="lightNightIcon">🌙</span>
+        <span id="lightNightLabel">Night</span>
+      </button>
+
+      <!-- Theme Palette Selector -->
+      <button id="themeCycleBtn" type="button" class="px-2.5 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors font-mono" title="Cycle Palette (Carbon / Paper / Sage / Nord)">
+        <span id="themeNameLabel">carbon</span>
+      </button>
+
+      <!-- Sound On/Off + Switch Profile -->
+      <button id="soundToggleBtn" type="button" class="px-2.5 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors flex items-center gap-1.5" title="Toggle Laptop Key Click Sound">
+        <span id="soundIconWrap">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+        </span>
+        <span id="soundLabel" class="hidden md:inline font-mono">click: on</span>
+      </button>
+
+      <button id="soundProfileBtn" type="button" class="hidden sm:inline-flex px-2 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors font-mono" title="Change Key Switch Sound Profile">
+        <span id="soundProfileLabel">scissor</span>
+      </button>
+
+      <button id="kbdToggleBtn" type="button" class="px-2.5 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors flex items-center gap-1.5" title="Show/Hide Laptop Keyboard Deck">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M18 13h.01M8 13h8"/></svg>
+        <span id="kbdToggleLabel" class="hidden lg:inline font-mono">deck: on</span>
+      </button>
+
+      <button id="statsModalBtn" type="button" class="px-2.5 py-1.5 rounded-md surface-elevated border text-muted-custom hover:text-current transition-colors flex items-center gap-1.5" title="View Session History, Daily Goal & Weak Keys">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="hidden sm:inline font-mono" id="headerBestWpm">0 wpm</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace Container -->
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-2 flex flex-col justify-center gap-4">
+
+    <!-- Sub-toolbar: Dynamic per Mode (Learn / Practice / Speed Test) -->
+    <section class="focus-dim">
+      <!-- LEARN MODE: BEGINNER FINGER PLACEMENT & ESSENTIALS GUIDE ONLY -->
+      <div id="learnToolbar" class="hidden flex-col gap-4">
+        <!-- Interactive Finger Selector Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl surface-elevated border">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-mono uppercase tracking-wider accent-text font-semibold px-1.5">Inspect Finger:</span>
+            <div class="flex flex-wrap items-center gap-1" id="fingerFilterButtons">
+              <button type="button" data-finger="all" class="finger-guide-btn px-2.5 py-1 rounded-md text-xs font-mono">Home Row (All 8)</button>
+              <button type="button" data-finger="lp" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">L.Pinky</button>
+              <button type="button" data-finger="lr" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">L.Ring</button>
+              <button type="button" data-finger="lm" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">L.Middle</button>
+              <button type="button" data-finger="li" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">L.Index</button>
+              <button type="button" data-finger="th" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">Thumbs</button>
+              <button type="button" data-finger="ri" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">R.Index</button>
+              <button type="button" data-finger="rm" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">R.Middle</button>
+              <button type="button" data-finger="rr" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">R.Ring</button>
+              <button type="button" data-finger="rp" class="finger-guide-btn px-2 py-1 rounded-md text-xs font-mono">R.Pinky</button>
+            </div>
+          </div>
+          <button id="startPracticeFromLearnBtn" type="button" class="px-3 py-1 rounded-lg accent-bg text-stone-950 font-mono text-xs font-semibold hover:opacity-90 transition-opacity">
+            Go to Practice →
+          </button>
+        </div>
+
+        <!-- Interactive Finger & Key Placement Inspector + Visual Hands -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+          <!-- Left: Selected Finger / Key Detail Card -->
+          <div class="lg:col-span-7 p-4 rounded-2xl surface-card border flex flex-col justify-between gap-3">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span id="lessonBadge" class="text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded accent-soft-bg accent-text font-medium">Home Row Anchor</span>
+                <h2 id="lessonTitle" class="text-base font-semibold mt-1">Base Position: A S D F &amp; J K L ;</h2>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <div class="text-right">
+                  <div class="text-[10px] font-mono uppercase text-muted-custom">Active Finger</div>
+                  <div id="activeFingerText" class="text-xs font-mono font-semibold accent-text">All 8 Fingers + Thumbs</div>
+                </div>
+                <div class="px-3 py-1.5 rounded-lg surface-elevated border text-center min-w-[52px]">
+                  <div class="text-[10px] font-mono text-muted-custom">Anchor</div>
+                  <div id="nextKeyLarge" class="text-sm font-mono font-bold">F &amp; J</div>
+                </div>
+              </div>
+            </div>
+
+            <p id="lessonDesc" class="text-xs text-muted-custom leading-relaxed">
+              Place your Left Index on F and Right Index on J — feel the small raised bumps on both keys without looking down. Let your other fingers fall naturally onto A S D (left) and K L ; (right), with both thumbs resting lightly on the Spacebar.
+            </p>
+
+            <!-- Row-by-Row Key Reach Breakdown for Selected Finger -->
+            <div id="fingerRowReachGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono text-xs">
+              <div class="p-2 rounded-lg surface-elevated border">
+                <div class="text-[10px] text-muted-custom">Home Row (Rest)</div>
+                <div id="reachHomeKeys" class="font-semibold mt-0.5 accent-text">A S D F · J K L ;</div>
+              </div>
+              <div class="p-2 rounded-lg surface-elevated border">
+                <div class="text-[10px] text-muted-custom">Top Row (Reach Up)</div>
+                <div id="reachTopKeys" class="font-semibold mt-0.5">Q W E R T · Y U I O P</div>
+              </div>
+              <div class="p-2 rounded-lg surface-elevated border">
+                <div class="text-[10px] text-muted-custom">Bottom Row (Curl Down)</div>
+                <div id="reachBottomKeys" class="font-semibold mt-0.5">Z X C V B · N M , . /</div>
+              </div>
+              <div class="p-2 rounded-lg surface-elevated border">
+                <div class="text-[10px] text-muted-custom">Numbers &amp; Modifiers</div>
+                <div id="reachNumKeys" class="font-semibold mt-0.5">1–0 · Shift · Space</div>
+              </div>
+            </div>
+
+            <div class="text-[11px] font-mono text-muted-custom flex items-center justify-between pt-1 border-t border-stone-500/15">
+              <span>💡 Tip: Press any key on your laptop or click any key on the keyboard below to see its exact finger &amp; home anchor.</span>
+            </div>
+          </div>
+
+          <!-- Right: Minimal SVG Left & Right Hands Diagram -->
+          <div class="lg:col-span-5 p-4 rounded-2xl surface-card border flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs font-mono text-muted-custom mb-1">
+              <span>Hand &amp; Finger Map</span>
+              <span class="text-[11px]">Click a finger to highlight its keys</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3 my-auto py-1">
+              <!-- Left Hand Card -->
+              <div class="p-2.5 rounded-xl surface-elevated border flex flex-col items-center gap-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Left Hand</span>
+                <div class="flex items-end justify-center gap-1.5 h-24 w-full px-1">
+                  <button type="button" data-finger="lp" class="hand-finger-bar flex-1 rounded-t-full bg-pink-400/30 border border-pink-400/60 h-12 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Left Pinky: A, Q, Z, 1, Shift">
+                    <span class="text-[10px] font-mono font-bold">A</span>
+                  </button>
+                  <button type="button" data-finger="lr" class="hand-finger-bar flex-1 rounded-t-full bg-orange-400/30 border border-orange-400/60 h-16 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Left Ring: S, W, X, 2">
+                    <span class="text-[10px] font-mono font-bold">S</span>
+                  </button>
+                  <button type="button" data-finger="lm" class="hand-finger-bar flex-1 rounded-t-full bg-yellow-400/30 border border-yellow-400/60 h-20 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Left Middle: D, E, C, 3">
+                    <span class="text-[10px] font-mono font-bold">D</span>
+                  </button>
+                  <button type="button" data-finger="li" class="hand-finger-bar flex-1 rounded-t-full bg-green-400/30 border border-green-400/60 h-16 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Left Index: F, G, R, T, V, B, 4, 5">
+                    <span class="text-[10px] font-mono font-bold">F•</span>
+                  </button>
+                  <button type="button" data-finger="th" class="hand-finger-bar flex-1 rounded-t-full bg-slate-400/30 border border-slate-400/60 h-9 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Left Thumb: Spacebar">
+                    <span class="text-[9px] font-mono">␣</span>
+                  </button>
+                </div>
+                <div class="text-[10px] font-mono text-muted-custom">Pinky → Thumb</div>
+              </div>
+
+              <!-- Right Hand Card -->
+              <div class="p-2.5 rounded-xl surface-elevated border flex flex-col items-center gap-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Right Hand</span>
+                <div class="flex items-end justify-center gap-1.5 h-24 w-full px-1">
+                  <button type="button" data-finger="th" class="hand-finger-bar flex-1 rounded-t-full bg-slate-400/30 border border-slate-400/60 h-9 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Right Thumb: Spacebar">
+                    <span class="text-[9px] font-mono">␣</span>
+                  </button>
+                  <button type="button" data-finger="ri" class="hand-finger-bar flex-1 rounded-t-full bg-sky-400/30 border border-sky-400/60 h-16 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Right Index: J, H, U, Y, N, M, 6, 7">
+                    <span class="text-[10px] font-mono font-bold">J•</span>
+                  </button>
+                  <button type="button" data-finger="rm" class="hand-finger-bar flex-1 rounded-t-full bg-indigo-400/30 border border-indigo-400/60 h-20 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Right Middle: K, I, , , 8">
+                    <span class="text-[10px] font-mono font-bold">K</span>
+                  </button>
+                  <button type="button" data-finger="rr" class="hand-finger-bar flex-1 rounded-t-full bg-purple-400/30 border border-purple-400/60 h-16 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Right Ring: L, O, ., 9">
+                    <span class="text-[10px] font-mono font-bold">L</span>
+                  </button>
+                  <button type="button" data-finger="rp" class="hand-finger-bar flex-1 rounded-t-full bg-rose-400/30 border border-rose-400/60 h-12 flex flex-col items-center justify-end pb-1 hover:opacity-100 transition-all" title="Right Pinky: ;, P, /, 0, Enter, Backspace, Shift">
+                    <span class="text-[10px] font-mono font-bold">;</span>
+                  </button>
+                </div>
+                <div class="text-[10px] font-mono text-muted-custom">Thumb → Pinky</div>
+              </div>
+            </div>
+            <div class="text-[11px] font-mono text-center text-muted-custom">
+              Dots (<span class="accent-text font-bold">•</span>) mark the physical tactile ridges on <strong class="text-current">F</strong> and <strong class="text-current">J</strong>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Beginner Essentials Checklist: 4 Core Pillars -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl surface-card border flex flex-col gap-1.5">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="accent-text font-semibold">01 · Home Row Base</span>
+              <span class="text-muted-custom">ASDF · JKL;</span>
+            </div>
+            <p class="text-xs text-muted-custom leading-relaxed">
+              Always start by finding the bumps on <strong class="text-current">F</strong> and <strong class="text-current">J</strong> with your index fingers without looking. After pressing any top or bottom key, return that finger immediately to its home key.
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-xl surface-card border flex flex-col gap-1.5">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="accent-text font-semibold">02 · Laptop Posture</span>
+              <span class="text-muted-custom">Wrists Neutral</span>
+            </div>
+            <p class="text-xs text-muted-custom leading-relaxed">
+              Keep your fingers slightly curved and let your wrists hover lightly—don't bend your wrists sideways or press your palms hard into the front edge of the laptop.
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-xl surface-card border flex flex-col gap-1.5">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="accent-text font-semibold">03 · Opposite Shift</span>
+              <span class="text-muted-custom">Capital &amp; Symbols</span>
+            </div>
+            <p class="text-xs text-muted-custom leading-relaxed">
+              Never use the same hand to hold <strong class="text-current">Shift</strong> and press a letter. Hold <strong class="text-current">Right Shift</strong> with your right pinky for left-hand letters, and <strong class="text-current">Left Shift</strong> for right-hand letters.
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-xl surface-card border flex flex-col gap-1.5">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="accent-text font-semibold">04 · Eyes on Screen</span>
+              <span class="text-muted-custom">Accuracy First</span>
+            </div>
+            <p class="text-xs text-muted-custom leading-relaxed">
+              Resist glancing down at your laptop keys. Type slowly at a steady rhythm aiming for <strong class="text-current">98%+ accuracy</strong>—speed builds automatically once muscle memory forms.
+            </p>
+          </div>
+        </div>
+
+        <!-- Beginner Interactive Home-Row Anchor Check -->
+        <div class="p-3.5 rounded-xl surface-elevated border flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xs font-mono font-semibold accent-text">✋ Home Row Check:</span>
+            <span class="text-xs text-muted-custom">Rest all 8 fingers on your laptop and press each Home Row key once:</span>
+          </div>
+          <div class="flex items-center gap-1.5 font-mono text-xs" id="homeRowCheckPills">
+            <span data-hcheck="a" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">A</span>
+            <span data-hcheck="s" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">S</span>
+            <span data-hcheck="d" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">D</span>
+            <span data-hcheck="f" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">F•</span>
+            <span class="mx-1 text-muted-custom">·</span>
+            <span data-hcheck="j" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">J•</span>
+            <span data-hcheck="k" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">K</span>
+            <span data-hcheck="l" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">L</span>
+            <span data-hcheck=";" class="hcheck-pill px-2.5 py-1 rounded surface-card border text-muted-custom transition-all">;</span>
+            <button id="resetHomeCheckBtn" type="button" class="ml-2 px-2 py-1 rounded surface-card border text-[11px] text-muted-custom hover:text-current">reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRACTICE MODE CONTROLS -->
+      <div id="practiceToolbar" class="hidden flex-col gap-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl surface-elevated border text-xs font-mono">
+          <div class="flex flex-wrap items-center gap-1">
+            <button type="button" data-pcat="drills" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">row drills</button>
+            <button type="button" data-pcat="words" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">common words</button>
+            <button type="button" data-pcat="quotes" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">sentences</button>
+            <button type="button" data-pcat="code" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">laptop code</button>
+            <button type="button" data-pcat="numbers" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">numbers &amp; symbols</button>
+            <button type="button" data-pcat="weak" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">weak keys</button>
+            <button type="button" data-pcat="custom" class="pcat-btn px-2.5 py-1 rounded-md transition-colors">custom text</button>
+          </div>
+          <div class="flex items-center gap-2 border-l border-stone-500/20 pl-2">
+            <button id="togglePunctBtn" type="button" class="px-2 py-1 rounded text-muted-custom hover:text-current transition-colors">@ punctuation</button>
+            <button id="toggleStrictBtn" type="button" class="px-2 py-1 rounded text-muted-custom hover:text-current transition-colors" title="Require fixing typos before advancing">! strict</button>
+          </div>
+        </div>
+
+        <!-- Row Drills Sub-bar -->
+        <div id="practiceDrillsDrawer" class="hidden flex-wrap items-center justify-between gap-2 p-2 rounded-xl surface-card border">
+          <div class="flex flex-wrap items-center gap-1.5" id="lessonButtonsContainer"></div>
+          <div class="flex items-center gap-1.5 border-l border-stone-500/20 pl-2.5">
+            <span class="text-[11px] font-mono text-muted-custom">Step:</span>
+            <button type="button" data-step="0" class="lesson-step-btn px-2 py-1 rounded text-xs font-mono">1. Keys</button>
+            <button type="button" data-step="1" class="lesson-step-btn px-2 py-1 rounded text-xs font-mono">2. Words</button>
+            <button type="button" data-step="2" class="lesson-step-btn px-2 py-1 rounded text-xs font-mono">3. Flow</button>
+          </div>
+        </div>
+
+        <!-- Custom Text Input Drawer -->
+        <div id="customTextDrawer" class="hidden p-3 rounded-xl surface-card border flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <label for="customTextInput" class="text-xs font-mono text-muted-custom">Paste or write your own text to practice:</label>
+            <button id="applyCustomTextBtn" type="button" class="px-3 py-1 rounded-md accent-bg text-stone-950 font-mono text-xs font-medium hover:opacity-90">Use Text</button>
+          </div>
+          <textarea id="customTextInput" rows="2" class="w-full rounded-lg surface-elevated border p-2 text-xs font-mono focus:outline-none" placeholder="Type or paste any study notes, essay paragraph, or code block here..."></textarea>
+        </div>
+      </div>
+
+      <!-- SPEED TEST MODE CONTROLS -->
+      <div id="testToolbar" class="hidden items-center justify-between flex-wrap gap-2 p-2 rounded-xl surface-elevated border text-xs font-mono">
+        <div class="flex items-center gap-1">
+          <button id="testTypeTimeBtn" type="button" data-testtype="time" class="testtype-btn px-2.5 py-1 rounded-md transition-colors">timed</button>
+          <button id="testTypeWordsBtn" type="button" data-testtype="words" class="testtype-btn px-2.5 py-1 rounded-md transition-colors">words</button>
+          <span class="mx-1 text-muted-custom">|</span>
+          <div id="timeDurationGroup" class="flex items-center gap-1">
+            <button type="button" data-dur="15" class="dur-btn px-2 py-1 rounded transition-colors">15s</button>
+            <button type="button" data-dur="30" class="dur-btn px-2 py-1 rounded transition-colors">30s</button>
+            <button type="button" data-dur="60" class="dur-btn px-2 py-1 rounded transition-colors">60s</button>
+            <button type="button" data-dur="120" class="dur-btn px-2 py-1 rounded transition-colors">120s</button>
+          </div>
+          <div id="wordCountGroup" class="hidden items-center gap-1">
+            <button type="button" data-wcount="10" class="wcount-btn px-2 py-1 rounded transition-colors">10</button>
+            <button type="button" data-wcount="25" class="wcount-btn px-2 py-1 rounded transition-colors">25</button>
+            <button type="button" data-wcount="50" class="wcount-btn px-2 py-1 rounded transition-colors">50</button>
+            <button type="button" data-wcount="100" class="wcount-btn px-2 py-1 rounded transition-colors">100</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="testPunctBtn" type="button" class="px-2 py-1 rounded text-muted-custom hover:text-current transition-colors">@ punctuation</button>
+          <button id="testNumsBtn" type="button" class="px-2 py-1 rounded text-muted-custom hover:text-current transition-colors"># numbers</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Metrics Bar -->
+    <section id="liveMetricsSection" class="flex items-end justify-between px-1">
+      <div class="flex items-baseline gap-6 sm:gap-8">
+        <div>
+          <div id="primaryTimerLabel" class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Progress</div>
+          <div id="liveProgressMetric" class="text-2xl sm:text-3xl font-mono font-semibold accent-text tabular-nums">0%</div>
+        </div>
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Speed</div>
+          <div class="flex items-baseline gap-1">
+            <span id="liveWpmMetric" class="text-2xl sm:text-3xl font-mono font-semibold tabular-nums">0</span>
+            <span class="text-xs font-mono text-muted-custom">wpm</span>
+          </div>
+        </div>
+        <div>
+          <div class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Accuracy</div>
+          <div id="liveAccMetric" class="text-2xl sm:text-3xl font-mono font-semibold tabular-nums">100%</div>
+        </div>
+        <div class="hidden sm:block">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-muted-custom">Streak</div>
+          <div id="liveStreakMetric" class="text-xl font-mono text-muted-custom tabular-nums">0</div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <span id="capsLockWarning" class="hidden px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 text-xs font-mono font-medium">
+          ⇪ Caps Lock On
+        </span>
+        <button id="paceCaretBtn" type="button" class="px-2.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono text-muted-custom hover:text-current transition-colors" title="Target WPM Ghost Pacemaker Caret">
+          pace: off
+        </button>
+        <button id="caretStyleBtn" type="button" class="hidden sm:inline-flex px-2.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono text-muted-custom hover:text-current transition-colors" title="Switch Caret Style (Line / Block / Underline)">
+          caret: |
+        </button>
+        <button id="fontSizeBtn" type="button" class="hidden sm:inline-flex px-2.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono text-muted-custom hover:text-current transition-colors" title="Adjust Text Size (M / L / XL)">
+          size: M
+        </button>
+        <button id="restartPromptBtn" type="button" class="px-3 py-1.5 rounded-lg surface-elevated border text-xs font-mono text-muted-custom hover:text-current transition-colors flex items-center gap-1.5" title="Restart Passage (Tab + Enter)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>restart</span>
+        </button>
+        <button id="nextPassageBtn" type="button" class="px-3 py-1.5 rounded-lg surface-elevated border text-xs font-mono text-muted-custom hover:text-current transition-colors flex items-center gap-1.5" title="Load New Text">
+          <span>next</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Typing Arena / Prompt Box -->
+    <section id="typingArenaSection" class="relative">
+      <input id="hiddenTypingInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="sr-only" aria-label="Typing input" />
+
+      <div id="promptContainer" tabindex="0" class="w-full rounded-2xl surface-card border p-5 sm:p-7 min-h-[148px] max-h-[210px] overflow-hidden relative cursor-text focus:outline-none focus:ring-1 focus:ring-amber-500/40 transition-shadow flex flex-col justify-center">
+        <div id="wordsWrapper" class="font-mono text-xl sm:text-2xl leading-[1.75] tracking-wide select-none transition-transform duration-150">
+          <!-- Characters injected here -->
+        </div>
+
+        <div id="unfocusedOverlay" class="hidden absolute inset-0 backdrop-blur-[2px] bg-black/25 rounded-2xl flex items-center justify-center cursor-pointer">
+          <div class="px-4 py-2 rounded-lg surface-elevated border text-xs font-mono flex items-center gap-2 shadow-sm">
+            <svg class="w-4 h-4 accent-text" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+            <span>Click or press any key to focus</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Post-Passage / Speed Test Result View -->
+    <section id="resultsPanel" class="hidden rounded-2xl surface-card border p-5 sm:p-6 transition-all">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-stone-500/15">
+        <div>
+          <span id="resultModeSubtitle" class="text-xs font-mono uppercase tracking-wider accent-text">Speed Test Completed</span>
+          <h3 id="resultHeadline" class="text-lg font-semibold mt-0.5">Great rhythm and key control.</h3>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="copyScorecardBtn" type="button" class="px-3.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono hover:opacity-80 transition-opacity">
+            📋 Copy Scorecard
+          </button>
+          <button id="retrySameBtn" type="button" class="px-3.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono hover:opacity-80 transition-opacity">
+            ↻ Repeat Same
+          </button>
+          <button id="practiceWeakFromResultBtn" type="button" class="px-3.5 py-1.5 rounded-lg surface-elevated border text-xs font-mono hover:opacity-80 transition-opacity">
+            🎯 Drill Weak Keys
+          </button>
+          <button id="nextFromResultBtn" type="button" class="px-4 py-1.5 rounded-lg accent-bg text-stone-950 font-mono text-xs font-semibold hover:opacity-90 transition-opacity">
+            Next Session →
+          </button>
+        </div>
+      </div>
+
+      <!-- Core Stat Cards + Canvas Timeline -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-4 items-center">
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl surface-elevated border">
+            <div class="text-[11px] font-mono text-muted-custom">net speed</div>
+            <div id="resNetWpm" class="text-3xl font-mono font-bold accent-text mt-0.5">0</div>
+            <div class="text-[11px] font-mono text-muted-custom mt-0.5">words / min</div>
+          </div>
+          <div class="p-3.5 rounded-xl surface-elevated border">
+            <div class="text-[11px] font-mono text-muted-custom">accuracy</div>
+            <div id="resAccuracy" class="text-3xl font-mono font-bold mt-0.5">100%</div>
+            <div id="resCharBreakdown" class="text-[11px] font-mono text-muted-custom mt-0.5">0 / 0 chars</div>
+          </div>
+          <div class="p-3.5 rounded-xl surface-elevated border">
+            <div class="text-[11px] font-mono text-muted-custom">raw speed</div>
+            <div id="resRawWpm" class="text-xl font-mono font-semibold mt-0.5">0 wpm</div>
+          </div>
+          <div class="p-3.5 rounded-xl surface-elevated border">
+            <div class="text-[11px] font-mono text-muted-custom">consistency</div>
+            <div id="resConsistency" class="text-xl font-mono font-semibold mt-0.5">100%</div>
+          </div>
+        </div>
+
+        <!-- WPM Over Time Chart -->
+        <div class="lg:col-span-8 flex flex-col gap-2">
+          <div class="flex items-center justify-between text-xs font-mono text-muted-custom">
+            <span>Speed &amp; Error Timeline</span>
+            <span id="resMissedKeysSummary">Missed keys: none</span>
+          </div>
+          <div class="relative h-44 w-full rounded-xl surface-elevated border p-3">
+            <canvas id="wpmChartCanvas" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Laptop Keyboard & Finger Guide Deck -->
+    <section id="keyboardDeckSection" class="focus-dim flex flex-col gap-2.5 pt-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-xs font-mono text-muted-custom">
+        <div class="flex items-center gap-3">
+          <span>Laptop ANSI Layout</span>
+          <button id="fingerLegendToggleBtn" type="button" class="px-2 py-0.5 rounded surface-elevated border text-[11px] hover:text-current transition-colors">
+            finger zones: on
+          </button>
+          <button id="heatmapToggleBtn" type="button" class="px-2 py-0.5 rounded surface-elevated border text-[11px] hover:text-current transition-colors">
+            miss heatmap: off
+          </button>
+        </div>
+
+        <!-- Finger Color Legend -->
+        <div id="fingerLegendBar" class="flex flex-wrap items-center gap-2.5 text-[10px]">
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-pink-400 inline-block"></i>L.Pinky</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-orange-400 inline-block"></i>L.Ring</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></i>L.Mid</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-green-400 inline-block"></i>L.Index</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-sky-400 inline-block"></i>R.Index</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-indigo-400 inline-block"></i>R.Mid</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-purple-400 inline-block"></i>R.Ring</span>
+          <span class="flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-rose-400 inline-block"></i>R.Pinky</span>
+        </div>
+      </div>
+
+      <!-- Responsive Laptop Keyboard Container -->
+      <div id="laptopKeyboardWrap" class="show-fingers w-full rounded-2xl surface-elevated border p-2.5 sm:p-4 overflow-x-auto">
+        <div id="keyboardRowsContainer" class="min-w-[600px] flex flex-col gap-1.5 font-mono text-xs">
+          <!-- Dynamically populated by KeyCraftKeyboard -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="focus-dim w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-muted-custom">
+    <div class="flex items-center gap-3">
+      <span><kbd class="px-1.5 py-0.5 rounded surface-elevated border">Tab</kbd> + <kbd class="px-1.5 py-0.5 rounded surface-elevated border">Enter</kbd> quick restart</span>
+      <span class="hidden sm:inline">·</span>
+      <span class="hidden sm:inline"><kbd class="px-1.5 py-0.5 rounded surface-elevated border">Esc</kbd> reset line</span>
+    </div>
+    <div id="footerSessionSummary">
+      0 sessions completed · keep wrists neutral &amp; eyes on screen
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl surface-card border shadow-lg font-mono text-xs flex items-center gap-2">
+    <span class="accent-text">✓</span>
+    <span id="toastMessage">Copied to clipboard</span>
+  </div>
+
+  <!-- Session Stats & Weak Keys Modal -->
+  <div id="statsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="w-full max-w-xl rounded-2xl surface-card border p-5 sm:p-6 shadow-xl flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-stone-500/15 pb-3">
+        <div>
+          <h2 class="text-base font-semibold font-mono">Laptop Typing Analytics</h2>
+          <p class="text-xs text-muted-custom">Stored locally and synced with backend</p>
+        </div>
+        <button id="closeStatsModalBtn" type="button" class="p-1.5 rounded-lg surface-elevated border text-muted-custom hover:text-current">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-3 rounded-xl surface-elevated border flex flex-col gap-1.5 font-mono text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-muted-custom">Daily Practice Goal (5 mins)</span>
+          <span id="modalDailyGoalText" class="accent-text font-semibold">0.0 / 5.0 min</span>
+        </div>
+        <div class="w-full h-2 rounded-full surface-card overflow-hidden">
+          <div id="modalDailyGoalBar" class="h-full accent-bg transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center font-mono">
+        <div class="p-3 rounded-xl surface-elevated border">
+          <div class="text-[11px] text-muted-custom">Best Speed</div>
+          <div id="modalBestWpm" class="text-xl font-bold accent-text mt-0.5">0 wpm</div>
+        </div>
+        <div class="p-3 rounded-xl surface-elevated border">
+          <div class="text-[11px] text-muted-custom">Avg Speed</div>
+          <div id="modalAvgWpm" class="text-xl font-bold mt-0.5">0 wpm</div>
+        </div>
+        <div class="p-3 rounded-xl surface-elevated border">
+          <div class="text-[11px] text-muted-custom">Avg Accuracy</div>
+          <div id="modalAvgAcc" class="text-xl font-bold mt-0.5">100%</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-muted-custom">Keys Needing Practice (Miss Rate)</h3>
+          <button id="drillWeakFromModalBtn" type="button" class="text-xs font-mono accent-text hover:underline">Practice these keys →</button>
+        </div>
+        <div id="modalWeakKeysList" class="flex flex-wrap gap-2 text-xs font-mono">
+          <span class="text-muted-custom">Complete a passage to analyze per-key accuracy.</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-mono uppercase tracking-wider text-muted-custom">Recent Runs</h3>
+          <button id="clearHistoryBtn" type="button" class="text-[11px] font-mono text-muted-custom hover:text-red-400">Clear History</button>
+        </div>
+        <div id="modalHistoryList" class="flex flex-col gap-1.5 text-xs font-mono max-h-48 overflow-y-auto">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Scripts Loaded in Order -->
+  <script src="js/data.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+:root {
+  --bg-primary: #faf9f6;
+  --bg-elevated: #f1efe9;
+  --bg-card: #ffffff;
+  --border-subtle: #e5e2dc;
+  --text-main: #1c1b18;
+  --text-muted: #78756e;
+  --text-untyped: #b5b1a8;
+  --accent: #d97706;
+  --accent-soft: rgba(217, 119, 6, 0.14);
+  --err: #dc2626;
+  --err-bg: rgba(220, 38, 38, 0.14);
+  --ok: #16a34a;
+}
+
+html.dark {
+  --bg-primary: #141413;
+  --bg-elevated: #1c1c1a;
+  --bg-card: #222220;
+  --border-subtle: #2e2e2b;
+  --text-main: #e8e6df;
+  --text-muted: #7c7a72;
+  --text-untyped: #52504a;
+  --accent: #e5a93b;
+  --accent-soft: rgba(229, 169, 59, 0.15);
+  --err: #ef4444;
+  --err-bg: rgba(239, 68, 68, 0.18);
+  --ok: #22c55e;
+}
+
+html.sage {
+  --bg-primary: #161b19;
+  --bg-elevated: #1e2522;
+  --bg-card: #242d29;
+  --border-subtle: #313d38;
+  --text-main: #e2ece7;
+  --text-muted: #7d9188;
+  --text-untyped: #4d5e57;
+  --accent: #6ee7b7;
+  --accent-soft: rgba(110, 231, 183, 0.14);
+  --err: #f87171;
+  --err-bg: rgba(248, 113, 113, 0.18);
+  --ok: #34d399;
+}
+
+html.nord {
+  --bg-primary: #181c24;
+  --bg-elevated: #212733;
+  --bg-card: #272e3d;
+  --border-subtle: #343d52;
+  --text-main: #e5e9f0;
+  --text-muted: #8190a5;
+  --text-untyped: #4c566a;
+  --accent: #88c0d0;
+  --accent-soft: rgba(136, 192, 208, 0.15);
+  --err: #bf616a;
+  --err-bg: rgba(191, 97, 106, 0.2);
+  --ok: #a3be8c;
+}
+
+/* Caret Style Variations */
+.caret-block .char.current::before {
+  width: 100%;
+  top: 8%;
+  bottom: 8%;
+  left: 0;
+  opacity: 0.28;
+  border-radius: 3px;
+}
+.caret-underline .char.current::before {
+  width: 100%;
+  height: 3px;
+  top: auto;
+  bottom: 2px;
+  left: 0;
+}
+
+/* Ghost Pacemaker Caret */
+.char.ghost-caret::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 14%;
+  bottom: 14%;
+  width: 2px;
+  background-color: var(--text-muted);
+  opacity: 0.55;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  overflow-x: hidden;
+}
+
+.surface-elevated {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-subtle);
+}
+
+.surface-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+.text-muted-custom {
+  color: var(--text-muted);
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.accent-bg {
+  background-color: var(--accent);
+}
+
+.accent-soft-bg {
+  background-color: var(--accent-soft);
+}
+
+/* Typing Arena Character Styling */
+.char {
+  position: relative;
+  transition: color 0.06s ease;
+  color: var(--text-untyped);
+  white-space: pre-wrap;
+}
+
+.char.correct {
+  color: var(--text-main);
+}
+
+.char.incorrect {
+  color: var(--err);
+  background-color: var(--err-bg);
+  border-radius: 3px;
+}
+
+.char.current::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 10%;
+  bottom: 10%;
+  width: 2.5px;
+  background-color: var(--accent);
+  border-radius: 2px;
+  animation: caretPulse 1s infinite;
+}
+
+.typing-active .char.current::before {
+  animation: none;
+}
+
+@keyframes caretPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
+}
+
+/* Laptop Key Styling */
+.kbd-key {
+  user-select: none;
+  transition: transform 0.06s ease, background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-bottom-width: 2px;
+  color: var(--text-muted);
+}
+
+.kbd-key.target-key {
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+  color: var(--text-main);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.kbd-key.pressed-ok {
+  transform: translateY(1.5px);
+  background-color: var(--accent);
+  color: #141413;
+  border-color: var(--accent);
+}
+
+.kbd-key.pressed-err {
+  transform: translateY(1.5px);
+  background-color: var(--err);
+  color: #ffffff;
+  border-color: var(--err);
+}
+
+/* Finger Zone Subtle Underlines when Finger Map is enabled */
+.show-fingers .finger-lp { border-bottom-color: #f472b6; }
+.show-fingers .finger-lr { border-bottom-color: #fb923c; }
+.show-fingers .finger-lm { border-bottom-color: #facc15; }
+.show-fingers .finger-li { border-bottom-color: #4ade80; }
+.show-fingers .finger-th { border-bottom-color: #94a3b8; }
+.show-fingers .finger-ri { border-bottom-color: #38bdf8; }
+.show-fingers .finger-rm { border-bottom-color: #818cf8; }
+.show-fingers .finger-rr { border-bottom-color: #c084fc; }
+.show-fingers .finger-rp { border-bottom-color: #f43f5e; }
+
+/* Focus Dimming when actively typing */
+.focus-dim {
+  transition: opacity 0.25s ease;
+}
+body.is-typing .focus-dim {
+  opacity: 0.28;
+}
+body.is-typing .focus-dim:hover {
+  opacity: 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 3px;
+}
