@@ -11,9 +11,9 @@
 
 ---
 
-## 📂 Project Architecture & Folder Structure
+## 📂 Project Architecture & Clean Folder Structure
 
-The project has been modularized into clean, separated directories for maintainability, readability, and instant deployment:
+The project has been separated into dedicated directories for readability, easy maintenance, and seamless Vercel deployment:
 
 ```text
 KeyCraft/
@@ -29,21 +29,18 @@ KeyCraft/
 │       ├── engine.js             # Typing engine, real-time WPM, accuracy & canvas chart
 │       └── app.js                # UI controls, shortcuts, theme toggles & modals
 │
-├── backend/                      # Node.js & Express server (local & server hosting)
+├── backend/                      # Node.js & Express REST API server
 │   ├── server.js                 # Express server mounting API routes & static files
-│   ├── package.json              # Backend dependencies (express, cors)
 │   └── routes/
 │       ├── stats.js              # /api/stats endpoint (history, average & best WPM)
 │       ├── quotes.js             # /api/quotes endpoint (practice passages by category)
 │       └── leaderboard.js        # /api/leaderboard endpoint (high score rankings)
 │
-├── api/                          # Vercel Serverless Functions (Zero-config deployment)
-│   ├── stats.js                  # Serverless handler for /api/stats
-│   ├── quotes.js                 # Serverless handler for /api/quotes
-│   └── leaderboard.js            # Serverless handler for /api/leaderboard
+├── api/                          # Vercel Serverless Function Bridge
+│   └── index.js                  # Direct zero-config serverless handler for /api/*
 │
 ├── vercel.json                   # Vercel routing configuration
-├── package.json                  # Root npm scripts
+├── package.json                  # Dependencies & start scripts
 ├── .gitignore                    # Git ignore file
 └── README.md                     # Documentation
 ```
