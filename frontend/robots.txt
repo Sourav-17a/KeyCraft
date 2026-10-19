@@ -1,0 +1,9 @@
+# robots.txt for KeyCraft Typing Studio
+User-agent: *
+Allow: /
+
+# Host
+Host: https://keycraft-tawny.vercel.app
+
+# Sitemaps
+Sitemap: https://keycraft-tawny.vercel.app/sitemap.xml

@@ -3,8 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KeyCraft — Minimal Laptop Typing Studio</title>
   
+  <!-- Primary SEO Meta Tags -->
+  <title>KeyCraft — Minimal Laptop Typing Studio | Typing Speed Test & Touch Typing</title>
+  <meta name="title" content="KeyCraft — Minimal Laptop Typing Studio | Typing Speed Test & Touch Typing" />
+  <meta name="description" content="Master laptop typing with KeyCraft. Free interactive typing speed test, touch typing lessons, real-time WPM analytics, laptop keyboard deck visualization, and customizable scissor switch sound effects." />
+  <meta name="keywords" content="typing test, laptop typing speed test, touch typing tutor, wpm test online, keyboard practice, scissor switch typing sound, ergonomic typing, keycraft" />
+  <meta name="author" content="KeyCraft" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="canonical" href="https://keycraft-tawny.vercel.app/" />
+
+  <!-- Theme & Favicon -->
+  <meta name="theme-color" content="#141413" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <!-- Open Graph / Facebook / LinkedIn / Discord -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://keycraft-tawny.vercel.app/" />
+  <meta property="og:title" content="KeyCraft — Minimal Laptop Typing Studio & Speed Test" />
+  <meta property="og:description" content="Master laptop typing with real-time WPM analytics, interactive laptop ANSI deck, touch typing lessons, and scissor switch sound effects." />
+  <meta property="og:image" content="https://keycraft-tawny.vercel.app/og-image.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="KeyCraft" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://keycraft-tawny.vercel.app/" />
+  <meta name="twitter:title" content="KeyCraft — Minimal Laptop Typing Studio & Speed Test" />
+  <meta name="twitter:description" content="Master laptop typing with real-time WPM analytics, interactive laptop ANSI deck, touch typing lessons, and scissor switch sound effects." />
+  <meta name="twitter:image" content="https://keycraft-tawny.vercel.app/og-image.svg" />
+
+  <!-- Structured Data: WebApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "KeyCraft",
+    "alternateName": "KeyCraft Typing Studio",
+    "url": "https://keycraft-tawny.vercel.app/",
+    "description": "Minimal Laptop Typing Studio for testing typing speed, learning touch typing, and improving accuracy with real-time analytics and scissor-switch sound effects.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Real-time Words Per Minute (WPM) calculation",
+      "Interactive ANSI laptop keyboard visualization with finger guide zones",
+      "Touch typing curriculum (Home row, top row, bottom row, punctuation)",
+      "Realistic scissor-switch and mechanical key audio feedback",
+      "Miss heatmap and weak-key drills",
+      "Custom text practice and timed speed tests (15s, 30s, 60s, 120s)",
+      "Dark mode and minimal aesthetic themes"
+    ]
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage Schema for Google Search Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is typing speed (WPM) calculated on KeyCraft?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "KeyCraft uses the international typing standard: 1 word equals 5 keystrokes. Net WPM is calculated as ((Total Correct Keystrokes / 5) - Uncorrected Errors) / Time in Minutes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does laptop scissor-switch typing practice differ from desktop keyboards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Laptop keyboards utilize low-profile scissor switches with 1.2mm to 1.8mm travel distance. Practicing with KeyCraft helps typists develop light, rhythmic finger placement without bottoming out keys or causing wrist fatigue."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I improve my typing speed and accuracy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Focus on 96%+ accuracy before trying to type fast. Use KeyCraft's visual finger zones to anchor your index fingers on the F and J bumps, avoid looking down at the keyboard, and practice weak-key drills daily."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are my typing stats and speed test results saved?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, KeyCraft automatically preserves your best WPM, average accuracy, lesson progress, and weak key miss rates in your browser local storage and syncs with the backend API."
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,6 +136,7 @@
 
   <!-- Top Navigation Bar -->
   <header class="focus-dim w-full max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex flex-wrap items-center justify-between gap-3">
+    <h1 class="sr-only">KeyCraft — Minimal Laptop Typing Studio, Typing Speed Test &amp; Touch Typing Practice</h1>
     <div class="flex items-center gap-6">
       <button id="brandResetBtn" type="button" class="flex items-center gap-2.5 text-left group focus:outline-none" title="Reset session (Tab + Enter)">
         <span class="w-7 h-7 rounded-md surface-elevated border flex items-center justify-center font-mono text-xs font-semibold accent-text group-hover:scale-105 transition-transform">
@@ -520,6 +625,85 @@
         <div id="keyboardRowsContainer" class="min-w-[600px] flex flex-col gap-1.5 font-mono text-xs">
           <!-- Dynamically populated by KeyCraftKeyboard -->
         </div>
+      </div>
+    </section>
+
+    <!-- SEO Guide, Feature Overview & Frequently Asked Questions (Crawlable Content) -->
+    <section class="focus-dim w-full mt-4 pt-4 border-t border-stone-500/15 flex flex-col gap-4 text-xs text-muted-custom">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="p-3.5 rounded-xl surface-elevated border flex flex-col gap-1.5">
+          <div class="font-mono text-xs font-semibold accent-text flex items-center gap-1.5">
+            <span>⌨</span> Laptop Scissor-Switch Deck
+          </div>
+          <p class="leading-relaxed text-[11px]">
+            Optimized for low-travel laptop keyboards (1.2mm–1.8mm). Visual finger zone mapping and tactile ridge anchors (F &amp; J) help you type with light, agile finger placement.
+          </p>
+        </div>
+        <div class="p-3.5 rounded-xl surface-elevated border flex flex-col gap-1.5">
+          <div class="font-mono text-xs font-semibold accent-text flex items-center gap-1.5">
+            <span>⚡</span> Real-Time Analytics &amp; Heatmap
+          </div>
+          <p class="leading-relaxed text-[11px]">
+            Measure net Words Per Minute (WPM), accuracy percentage, keystroke consistency, and weak key miss rates with instant visual feedback and audio switch sounds.
+          </p>
+        </div>
+        <div class="p-3.5 rounded-xl surface-elevated border flex flex-col gap-1.5">
+          <div class="font-mono text-xs font-semibold accent-text flex items-center gap-1.5">
+            <span>🎯</span> Learn, Practice &amp; Speed Test
+          </div>
+          <p class="leading-relaxed text-[11px]">
+            Master touch typing from the home row to complex programming symbols. Test your speed with customizable 15s to 120s timer intervals or custom text passages.
+          </p>
+        </div>
+      </div>
+
+      <!-- FAQ Accordion for Search Engine Optimization -->
+      <div class="p-4 rounded-2xl surface-card border flex flex-col gap-3">
+        <h2 class="font-mono font-semibold text-xs text-muted-custom uppercase tracking-wider flex items-center gap-1.5">
+          <span>ℹ</span> Frequently Asked Questions &amp; Laptop Typing Guide
+        </h2>
+        
+        <details class="group border-b border-stone-500/15 pb-2.5 cursor-pointer">
+          <summary class="font-mono font-medium text-xs hover:text-current transition-colors flex items-center justify-between list-none">
+            <span>How does KeyCraft calculate Words Per Minute (WPM)?</span>
+            <span class="text-xs transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-2 text-xs leading-relaxed opacity-90 pl-1">
+            KeyCraft follows the standardized international typing test formula: 1 word equals exactly 5 keystrokes (including spaces and punctuation). Net WPM is calculated as <code class="font-mono accent-text">((Correct Characters / 5) - Uncorrected Errors) / Time (min)</code>. This ensures consistent and reliable benchmarking.
+          </p>
+        </details>
+
+        <details class="group border-b border-stone-500/15 pb-2.5 cursor-pointer">
+          <summary class="font-mono font-medium text-xs hover:text-current transition-colors flex items-center justify-between list-none">
+            <span>Why practice touch typing specifically for laptop keyboards?</span>
+            <span class="text-xs transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-2 text-xs leading-relaxed opacity-90 pl-1">
+            Laptop keyboards use scissor-switch mechanisms with flat keycaps and shallow travel. Typists accustomed to high-profile desktop switches often bottom out keys too forcefully, causing wrist fatigue and missed keystrokes. KeyCraft trains quick, low-impact finger agility suited for modern laptops.
+          </p>
+        </details>
+
+        <details class="group border-b border-stone-500/15 pb-2.5 cursor-pointer">
+          <summary class="font-mono font-medium text-xs hover:text-current transition-colors flex items-center justify-between list-none">
+            <span>How do I increase my typing speed from 40 to 80+ WPM?</span>
+            <span class="text-xs transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-2 text-xs leading-relaxed opacity-90 pl-1">
+            1. Keep your eyes on the screen and never look down at the keyboard.<br/>
+            2. Prioritize 96%+ accuracy over raw speed; speed naturally follows clean muscle memory.<br/>
+            3. Use the Miss Heatmap on KeyCraft to isolate and drill your weakest keys for 5 minutes daily.
+          </p>
+        </details>
+
+        <details class="group pb-1 cursor-pointer">
+          <summary class="font-mono font-medium text-xs hover:text-current transition-colors flex items-center justify-between list-none">
+            <span>Is KeyCraft free and does it work offline?</span>
+            <span class="text-xs transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-2 text-xs leading-relaxed opacity-90 pl-1">
+            Yes, KeyCraft is 100% free with no ads, tracking cookies, or subscription walls. All session history and weak key statistics are saved directly in your browser's local storage and synced with the API.
+          </p>
+        </details>
       </div>
     </section>
 

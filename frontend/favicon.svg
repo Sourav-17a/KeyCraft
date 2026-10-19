@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#18181b"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#27272a" stroke-width="2"/>
+  <text x="32" y="40" font-family="-apple-system, BlinkMacSystemFont, 'JetBrains Mono', monospace" font-size="28" font-weight="600" fill="#f4f4f5" text-anchor="middle" dominant-baseline="middle">⌘</text>
+  <circle cx="48" cy="18" r="4" fill="#f59e0b"/>
+</svg>

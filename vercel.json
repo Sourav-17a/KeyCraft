@@ -6,6 +6,22 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/robots.txt",
+      "destination": "/frontend/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/frontend/sitemap.xml"
+    },
+    {
+      "source": "/favicon.svg",
+      "destination": "/frontend/favicon.svg"
+    },
+    {
+      "source": "/og-image.svg",
+      "destination": "/frontend/og-image.svg"
+    },
+    {
       "source": "/",
       "destination": "/frontend/index.html"
     },

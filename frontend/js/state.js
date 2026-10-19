@@ -3,7 +3,7 @@
   'use strict';
 
   const state = {
-    mode: 'learn', // 'learn' | 'practice' | 'test'
+    mode: 'practice', // 'learn' | 'practice' | 'test'
     theme: 'dark', // 'dark' (carbon) | 'light' (paper) | 'sage' | 'nord'
     lastNightTheme: 'dark',
     soundEnabled: true,
